@@ -1,3 +1,5 @@
+import { Redirect } from "react-router-dom"
+
 const initialState = {
     Chart: []
 }
@@ -5,6 +7,7 @@ const initialState = {
 const rootReducer = (state = initialState, action) => {
     if (action.type === 'ADD_ITEM'){
         const index = state.Chart.findIndex(val => val.Chart.Id === action.Chart.Id)
+        console.log(state.Chart && state.Chart.map((val)=>val.Id))
         if (index !== -1) {
             const newChart = state.Chart
             newChart[index].itemQty += 1
@@ -54,26 +57,6 @@ const rootReducer = (state = initialState, action) => {
                 itemQty: newChart
             }
         }
-    }
-
-    if (action.type === 'FILTER_NAME') {
-        const datas = JSON.parse(localStorage.getItem('datas'))
-        alert('ok')
-        console.log(datas)
-        return (
-            <div>
-                {/* <div>{
-                    datas && datas.map((e, index) => {
-                        return (
-                            <div key={index}>
-                                <p>{e.name}</p>
-                            </div>
-                            )
-                        })    
-                }</div> */}
-            </div>
-            
-        )
     }
 
     return state;

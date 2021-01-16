@@ -9,7 +9,6 @@ import { useState } from 'react'
 const Chart = ({ rmvItem, Chart, addQty, minQty, filtItem}) => {
     const datas = JSON.parse(localStorage.getItem('datas'))
     const [status, setstatus] = useState("PENDING")
-    const totalChost = Chart.map( val => val.Chart.Price ).reduce( (a,b) => (a+b), 0)
     const totalQty = Chart.map( val =>  val.itemQty ).reduce( (a,b) => (a+b), 0 );
     const totalPaid = Chart.map( val => val.Chart.Price *  val.itemQty ).reduce( (a,b) => (a+b), 0)
     const Chekout = () => {
@@ -20,7 +19,7 @@ const Chart = ({ rmvItem, Chart, addQty, minQty, filtItem}) => {
         return(
             <div className="empty-chart">
                 <h2>Your cart is empty</h2>
-                <Link to= '/product'>
+                <Link to= '/list-product'>
                     <button>Shop</button>
                 </Link>
             </div>
@@ -41,14 +40,7 @@ const Chart = ({ rmvItem, Chart, addQty, minQty, filtItem}) => {
 		            <div className="top-img">
 			            <img src={chek} width="25px" height="25px" />
 		            </div>
-                    <div className="search">
-			            <tr>
-				            <td>
-					            <input type="text" placeholder="PRODUCT" className="input" onChange={(e) => filtItem(e.target.value)}/>
-					            <a href="#" class="imgsearch"><img src={search} /></a>
-				            </td>
-			            </tr>
-		            </div>
+                    
 		            <div className="cleard">
 			
 		            </div>
@@ -59,13 +51,14 @@ const Chart = ({ rmvItem, Chart, addQty, minQty, filtItem}) => {
             </div>
             <div className="mapChartProduct">{
                 Chart && Chart.map((e, index) => {
+                    console.log(e.itemQty)
                     return (
                         <div className="prdct" key={index}>
                             <div className="imgproduct">
                                 <img src = {e.Chart.Img} width="80px" />
                             </div>
                             <div className="jdlproduct">
-                                <p>{e.Chart.Name}({e.Chart.Color})</p>
+                                <p>{e.Chart.Name} ({e.Chart.Color})</p>
                                 <h3>{((e.Chart.Price) * (e.itemQty)).toFixed(2)}</h3>
                             </div>
                             <div className="clr"></div>
@@ -73,18 +66,32 @@ const Chart = ({ rmvItem, Chart, addQty, minQty, filtItem}) => {
                                 <p>Stock ready</p>
                                 <p className="P">all size</p>
                                 <button className="btnrmv" onClick={() => rmvItem(e.Chart.Id)}>Remove</button>
-                                <Link to='/cart'>
-                                    <button className="addjust" onClick= {()=> minQty(e.Chart.Id)}>
-                                        -
-                                    </button>
-                                </Link>
+                                {
+                                    e.itemQty <= 1 && (
+                                        <Link>
+                                            <button className="addjust">
+                                                -
+                                            </button>
+                                        </Link>
+                                    )
+                                }
+                                
+                                {
+                                    e.itemQty > 1 && (
+                                        <Link>
+                                            <button className="addjust" onClick={() => minQty(e.Chart.Id)} >
+                                                -
+                                            </button>
+                                        </Link>
+                                    )
+                                }
+
                                     {e.itemQty}
-                                <Link to='/cart'>
+                                <Link>
                                     <button className="addjust" onClick= {()=> addQty(e.Chart.Id)}>
                                         +
                                     </button>
                                 </Link>
-                               
                             </div>
                             <div className="clr2"></div>
                         </div>
@@ -118,23 +125,23 @@ const Chart = ({ rmvItem, Chart, addQty, minQty, filtItem}) => {
 
 const mapStatetoProps =(props)=>{
 	return {
-        Chart: props.payment.Chart
+        Chart: props.payment.Chart,
     }
 }
 
 const mapDispatchtoProps = (dispatch) => {
 	return {
-      rmvItem: (id) => dispatch({
+      rmvItem: (Id) => dispatch({
         type: 'REMOVE_ITEM',
-        value: id
+        value: Id
       }),
-      addQty: (id) => dispatch({
+      addQty: (Id) => dispatch({
         type: 'ADD_QTY',
-        value: id
+        value: Id
       }),
-      minQty: (id) => dispatch({
+      minQty: (Id) => dispatch({
         type: 'MIN_QTY',
-        value: id
+        value: Id
       }),
       filtItem: () => dispatch({
           type: 'FILTER_NAME'

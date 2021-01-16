@@ -1,28 +1,33 @@
-import chek from '../img/checkout.png'
+import add from '../img/add.png'
 import search from '../img/search.png'
-import logo from '../img/icon.png'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
+import data from './sample'
 
-const List = () => {
-	const [num, setnum] = useState(1);
-	const incnum = () => {
-		setnum(num + 1);
-	}
-	console.log(num)
+const List = ({ toDetail, Chart }) => {
+	localStorage.setItem('datas', JSON.stringify(data))
+	const [Input, setInput] = useState('')
+	const datas = JSON.parse(localStorage.getItem('datas'))
+	const x = datas.filter(val => (val.id) !== (''))
+	console.log(x)
+	
     return (
         <div className="list">
             <div class="top">
 		        <div class="shopName">
 			        <p>Your Shop Name</p>
 		        </div>
-		        <div class="top-img">
-			        <img src={chek} width="16px" height="16px" />
-		        </div>
-		        <div class="search">
+				<Link to="/addProduct">
+		        	<div className="top-img">
+			        	<img src={add} width="25px" height="25px" />
+		        	</div>
+				</Link>
+		        <div className="search">
 			        <tr>
 				        <td>
-					        <input type="text" placeholder="PRODUCT" class="input"/>
-					        <a href="#" class="imgsearch"><img src={search} /></a>
+					        <input type="text" placeholder="PRODUCT" className="input" onChange={(e) => setInput(e.target.value)}/>
+					        <a href="#" className="imgsearch"><img src={search} /></a>
 				        </td>
 			        </tr>
 		        </div>
@@ -41,44 +46,28 @@ const List = () => {
 				        <li><a href="">JACKET</a></li>
 			        </ul>
 		        </div>
-		        <div class="centerd">
-			        <div class="img1d" onclick="click1()">
-				        <h4>TITLE HERE</h4>
-				        <p>CATEGORY</p>
-			        </div>
-			        <div class="img2d" onclick="click2()">
-				        <h4>TITLE HERE</h4>
-				        <p>CATEGORY</p>
-			        </div>
-			        <div class="img3d" onclick="click3()">
-				        <h4>TITLE HERE</h4>
-				        <p>CATEGORY</p>
-			        </div>
-			        <div class="img4d" onclick="click4()">
-				        <h4>TITLE HERE</h4>
-				        <p>CATEGORY</p>
-			        </div>
-			        <div class="img5d" onclick="click5()">
-				        <h4>TITLE HERE</h4>
-				        <p>CATEGORY</p>
-			        </div>
-			        <div class="img6d" onclick="click6()">
-				        <h4>TITLE HERE</h4>
-				        <p>CATEGORY</p>
-			        </div>
-			        <div class="img7d" onclick="click7()">
-				        <h4>TITLE HERE</h4>
-				        <p>CATEGORY</p>
-			        </div>
-			        <div class="img8d" onclick="click8()">
-				        <h4>TITLE HERE</h4>
-				        <p>CATEGORY</p>
-			        </div>
-			        <div class="img9d" onclick="click9()">
-				        <h4>TITLE HERE</h4>
-				        <p>CATEGORY</p>
-			        </div>
-		        </div>
+		        <div class="centerd">{
+					datas && datas.filter((e) => {
+						if (Input === ""){
+							return e
+						} else {
+							return (e.color.toLowerCase().includes(Input.toLowerCase()))
+						}
+						
+					}).map((e, index) => {
+						console.log (e)
+						return (
+							<Link to='/product'>
+								<div key={index} class="img1d" onClick={() => toDetail(e.id)}>
+									<img src={e.image} width="185px" />
+				        			<h3>{e.color}</h3>
+									<p>{e.discount}</p>
+			    				</div>
+							</Link>
+						)
+					})
+				}</div>    
+		        
 		        <div class="rightd">
 			        <p>ALL</p>
 			        <ul>
@@ -101,14 +90,24 @@ const List = () => {
 			            <a href="#">5</a>
 		            </div>
 	            </div>
-				<button onClick={incnum}>inc</button>
-				<p>{num}</p>
-            </div>
-			<div className="footer">
-                <img src={logo}/>
             </div>
         </div>
     )
 }
 
-export default List
+const mapStatetoProps =(props)=>{
+	return {
+		Chart: props.payment.Chart,
+	}
+}
+
+const mapDispatchtoProps = (dispatch) => {
+	return{
+		toDetail: (id) => dispatch({
+			type: 'LIST_CLICK',
+			value: id
+		})
+	}
+}
+
+export default connect(mapStatetoProps,mapDispatchtoProps)(List)

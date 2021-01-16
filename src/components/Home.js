@@ -16,7 +16,9 @@ const Home = () => {
                 <div className="listtop">
                     <ul>
                         <li className="list1"><a href="#">LATEST</a></li>
-                        <li className="list1"><a href="#">ALL</a></li>
+                        <Link to='/list-product'>
+                            <li className="list1"><a href="#">ALL</a></li>
+                        </Link>
                     </ul>
                 </div>
                 <div className="clear">
@@ -24,7 +26,7 @@ const Home = () => {
                 </div>
                 <div className="baris2">
                     <div className="btn-shop">
-                        <Link to='/product'>
+                        <Link to='/list-product'>
                             <button>
                                 Shop Now
                             </button>
@@ -66,9 +68,6 @@ const Home = () => {
                 
                     </div>
                 </div>
-            </div>
-            <div className="footer">
-                <img src={logo}/>
             </div>
         </div>
     )

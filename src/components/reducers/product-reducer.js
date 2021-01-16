@@ -3,11 +3,12 @@ const initialState = {
   }
   
   const rootReducer = (state = initialState, action) => {
+    const datas = JSON.parse(localStorage.getItem('datas'))
     if (action.type === 'INC_NUMBER') {
-      if (state.number === 8) {
+       if (state.number === datas.length - 1) {
         return {
           ...state,
-          number: state.number - 8
+          number: state.number = 0
         }
       }else {
         return {
@@ -21,13 +22,23 @@ const initialState = {
       if (state.number === 0 ){
         return {
           ...state,
-           number: state.number + 8
+           number: state.number = datas.length - 1
          }
       }else {
         return{
           ...state,
           number: state.number - 1
         }
+      }
+    }
+
+    if (action.type === 'LIST_CLICK'){
+      const datas = JSON.parse(localStorage.getItem('datas'))
+      const index = datas.findIndex(val => (val.id) === (action.value))
+      console.log(index)
+      return {
+        ...state,
+        number: state.number = index
       }
     }
   
